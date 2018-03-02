@@ -157,57 +157,16 @@ var BootstrapRadioInlineRenderer = RadioFieldRenderer.extend({
 
 // ========================================================= Form Components ===
 
-var BootstrapForm = React.createClass({displayName: "BootstrapForm",
-  statics: {
-    patchFields:function(form) {
-      if (form.__patchedByBootstrapForm) { return }
-      var fieldNames = Object.keys(form.fields)
-      for (var i = 0, l = fieldNames.length; i < l ; i++) {
-        var field = form.fields[fieldNames[i]]
-        if (field.widget instanceof CheckboxSelectMultiple) {
-          if (field.widget.renderer === CheckboxFieldRenderer) {
-            field.widget.renderer = BootstrapCheckboxRenderer
-          }
-        }
-        else if (field.widget instanceof RadioSelect) {
-          if (field.widget.renderer === RadioFieldRenderer) {
-            field.widget.renderer = BootstrapRadioRenderer
-          }
-        }
-        else if (field instanceof MultiValueField) {
-          if (field.fields.length < 5 &&
-              field.widget.formatOutput === MultiWidget.prototype.formatOutput) {
-            var colClass = 'col-sm-' + (12 / field.fields.length)
-            field.widget.formatOutput = function(widgets) {
-              return React.createElement("div", {className: "row"}, 
-                widgets.map(function(widget)  {return React.createElement("div", {className: colClass}, widget);})
-              )
-            }
-          }
-        }
-      }
-    }
-  },
-
-  propTypes: {
-    form: PropTypes.instanceOf(Form).isRequired,
-    spinner: PropTypes.string
-  },
-
-  getDefaultProps:function() {
-    return {
-      spinner: SPINNER
-    }
-  },
-
-  render:function() {
+// var BootstrapForm = React.createClass()
+var ____Class0=React.Component;for(var ____Class0____Key in ____Class0){if(____Class0.hasOwnProperty(____Class0____Key)){BootstrapForm[____Class0____Key]=____Class0[____Class0____Key];}}var ____SuperProtoOf____Class0=____Class0===null?null:____Class0.prototype;BootstrapForm.prototype=Object.create(____SuperProtoOf____Class0);BootstrapForm.prototype.constructor=BootstrapForm;BootstrapForm.__superConstructor__=____Class0;function BootstrapForm(){if(____Class0!==null){____Class0.apply(this,arguments);}}
+  Object.defineProperty(BootstrapForm.prototype,"render",{writable:true,configurable:true,value:function() {
     patchForm(this.props.form)
     return React.createElement("div", null, 
       this.renderRows()
     )
-  },
+  }});
 
-  renderRows:function() {
+  Object.defineProperty(BootstrapForm.prototype,"renderRows",{writable:true,configurable:true,value:function() {
     var rows = []
     var form = this.props.form
     var formErrors = form.nonFieldErrors()
@@ -231,22 +190,50 @@ var BootstrapForm = React.createClass({displayName: "BootstrapForm",
       ))
     }
     return rows
-  }
-})
+  }});
 
-var BootstrapField = React.createClass({displayName: "BootstrapField",
-  propTypes: {
-    field: PropTypes.instanceOf(BoundField).isRequired
-  , spinner: PropTypes.string
-  },
 
-  getDefaultProps:function() {
-    return {
-      spinner: SPINNER
+BootstrapForm.patchFields = function(form) {
+  if (form.__patchedByBootstrapForm) { return }
+  var fieldNames = Object.keys(form.fields)
+  for (var i = 0, l = fieldNames.length; i < l ; i++) {
+    var field = form.fields[fieldNames[i]]
+    if (field.widget instanceof CheckboxSelectMultiple) {
+      if (field.widget.renderer === CheckboxFieldRenderer) {
+        field.widget.renderer = BootstrapCheckboxRenderer
+      }
     }
-  },
+    else if (field.widget instanceof RadioSelect) {
+      if (field.widget.renderer === RadioFieldRenderer) {
+        field.widget.renderer = BootstrapRadioRenderer
+      }
+    }
+    else if (field instanceof MultiValueField) {
+      if (field.fields.length < 5 &&
+          field.widget.formatOutput === MultiWidget.prototype.formatOutput) {
+        var colClass = 'col-sm-' + (12 / field.fields.length)
+        field.widget.formatOutput = function(widgets) {
+          return React.createElement("div", {className: "row"}, 
+            widgets.map(function(widget)  {return React.createElement("div", {className: colClass}, widget);})
+          )
+        }
+      }
+    }
+  }
+};
 
-  render:function() {
+BootstrapForm.propTypes = {
+  form: PropTypes.instanceOf(Form).isRequired,
+  spinner: PropTypes.string
+};
+
+BootstrapForm.defaultProps = {
+  spinner: SPINNER
+};
+
+// var BootstrapField = React.createClass()
+var ____Class1=React.Component;for(var ____Class1____Key in ____Class1){if(____Class1.hasOwnProperty(____Class1____Key)){BootstrapField[____Class1____Key]=____Class1[____Class1____Key];}}var ____SuperProtoOf____Class1=____Class1===null?null:____Class1.prototype;BootstrapField.prototype=Object.create(____SuperProtoOf____Class1);BootstrapField.prototype.constructor=BootstrapField;BootstrapField.__superConstructor__=____Class1;function BootstrapField(){if(____Class1!==null){____Class1.apply(this,arguments);}}
+  Object.defineProperty(BootstrapField.prototype,"render",{writable:true,configurable:true,value:function() {
     var field = this.props.field
     var status = field.status()
     var isBooleanField = field.field.constructor === BooleanField
@@ -281,8 +268,17 @@ var BootstrapField = React.createClass({displayName: "BootstrapField",
       ), 
       status == 'error' && field.errors().messages().map(errorMessage)
     )
-  }
-})
+  }});
+
+
+BootstrapField.propTypes = {
+  field: PropTypes.instanceOf(BoundField).isRequired
+, spinner: PropTypes.string
+};
+
+BootstrapField.defaultProps = {
+  spinner: SPINNER
+};
 
 // ========================================================= Grid Components ===
 
@@ -385,51 +381,9 @@ function calculateColumnProps(childProps, options) {
   return colSizeProps
 }
 
-var ColMixin = {
-  propTypes: {
-    className: PropTypes.string
-  , xs: colSizeChecker
-  , sm: colSizeChecker
-  , md: colSizeChecker
-  , lg: colSizeChecker
-  , xsOffset: colSizeChecker
-  , smOffset: colSizeChecker
-  , mdOffset: colSizeChecker
-  , lgOffset: colSizeChecker
-  },
-
-  getColClassName:function() {
-    var props = this.props
-    var classNames = {}
-    classNames[("col-xs-" + props.xs)] = !!props.xs
-    classNames[("col-sm-" + props.sm)] = !!props.sm
-    classNames[("col-md-" + props.md)] = !!props.md
-    classNames[("col-lg-" + props.lg)] = !!props.lg
-    classNames[("col-xs-offset-" + props.xsOffset)] = !!props.xsOffset
-    classNames[("col-sm-offset-" + props.smOffset)] = !!props.smOffset
-    classNames[("col-md-offset-" + props.mdOffset)] = !!props.mdOffset
-    classNames[("col-lg-offset-" + props.lgOffset)] = !!props.lgOffset
-    return cx(props.className, classNames)
-  }
-}
-
-var Container = React.createClass({displayName: "Container",
-  propTypes: {
-    autoColumns: PropTypes.oneOf(BOOTSTRAP_COLUMN_SIZES)
-  , className: PropTypes.string
-  , fluid: PropTypes.bool
-  , spinner: PropTypes.string
-  },
-
-  getDefaultProps:function() {
-    return {
-      autoColumns: null
-    , fluid: false
-    , spinner: SPINNER
-    }
-  },
-
-  render:function() {
+// var Container = React.createClass()
+var ____Class2=React.Component;for(var ____Class2____Key in ____Class2){if(____Class2.hasOwnProperty(____Class2____Key)){Container[____Class2____Key]=____Class2[____Class2____Key];}}var ____SuperProtoOf____Class2=____Class2===null?null:____Class2.prototype;Container.prototype=Object.create(____SuperProtoOf____Class2);Container.prototype.constructor=Container;Container.__superConstructor__=____Class2;function Container(){if(____Class2!==null){____Class2.apply(this,arguments);}}
+  Object.defineProperty(Container.prototype,"render",{writable:true,configurable:true,value:function() {
     var $__0=  this.props,form=$__0.form
     patchForm(form)
     var formErrors = form.nonFieldErrors()
@@ -447,16 +401,24 @@ var Container = React.createClass({displayName: "Container",
         React.createElement("img", {src: this.props.spinner}), " Validating…"
       )
     )
-  }
-})
+  }});
 
-var Row = React.createClass({displayName: "Row",
-  propTypes: {
-    autoColumns: PropTypes.oneOf(BOOTSTRAP_COLUMN_SIZES)
-  , className: PropTypes.string
-  },
 
-  render:function() {
+Container.propTypes = {
+  autoColumns: PropTypes.oneOf(BOOTSTRAP_COLUMN_SIZES)
+, className: PropTypes.string
+, fluid: PropTypes.bool
+, spinner: PropTypes.string
+};
+
+Container.defaultProps = {
+  autoColumns: null
+  , fluid: false
+  , spinner: SPINNER
+}
+
+var ____Class3=React.Component;for(var ____Class3____Key in ____Class3){if(____Class3.hasOwnProperty(____Class3____Key)){Row[____Class3____Key]=____Class3[____Class3____Key];}}var ____SuperProtoOf____Class3=____Class3===null?null:____Class3.prototype;Row.prototype=Object.create(____SuperProtoOf____Class3);Row.prototype.constructor=Row;Row.__superConstructor__=____Class3;function Row(){if(____Class3!==null){____Class3.apply(this,arguments);}}
+  Object.defineProperty(Row.prototype,"render",{writable:true,configurable:true,value:function() {
     var columnProps = noobj
     if (this.props.autoColumns) {
       var childProps = []
@@ -476,33 +438,62 @@ var Row = React.createClass({displayName: "Row",
         }, columnProps[index]))
       }.bind(this))
     )
-  }
-})
+  }});
 
-var Col = React.createClass({displayName: "Col",
-  mixins: [ColMixin],
 
-  render:function() {
+Row.propTypes = {
+  autoColumns: PropTypes.oneOf(BOOTSTRAP_COLUMN_SIZES)
+, className: PropTypes.string
+};
+
+var ____Class4=React.Component;for(var ____Class4____Key in ____Class4){if(____Class4.hasOwnProperty(____Class4____Key)){Col[____Class4____Key]=____Class4[____Class4____Key];}}var ____SuperProtoOf____Class4=____Class4===null?null:____Class4.prototype;Col.prototype=Object.create(____SuperProtoOf____Class4);Col.prototype.constructor=Col;Col.__superConstructor__=____Class4;function Col(){if(____Class4!==null){____Class4.apply(this,arguments);}}
+  Object.defineProperty(Col.prototype,"getColClassName",{writable:true,configurable:true,value:function() {
+    var props = this.props
+    var classNames = {}
+    classNames[("col-xs-" + props.xs)] = !!props.xs
+    classNames[("col-sm-" + props.sm)] = !!props.sm
+    classNames[("col-md-" + props.md)] = !!props.md
+    classNames[("col-lg-" + props.lg)] = !!props.lg
+    classNames[("col-xs-offset-" + props.xsOffset)] = !!props.xsOffset
+    classNames[("col-sm-offset-" + props.smOffset)] = !!props.smOffset
+    classNames[("col-md-offset-" + props.mdOffset)] = !!props.mdOffset
+    classNames[("col-lg-offset-" + props.lgOffset)] = !!props.lgOffset
+    return cx(props.className, classNames)
+  }});
+
+  Object.defineProperty(Col.prototype,"render",{writable:true,configurable:true,value:function() {
     return React.createElement("div", {className: this.getColClassName()}, 
       this.props.children
     )
-  }
-})
+  }});
 
-var Field = React.createClass({displayName: "Field",
-  mixins: [ColMixin],
 
-  propTypes: {
-    name: PropTypes.string.isRequired
-  },
+var ____Class5=React.Component;for(var ____Class5____Key in ____Class5){if(____Class5.hasOwnProperty(____Class5____Key)){Field[____Class5____Key]=____Class5[____Class5____Key];}}var ____SuperProtoOf____Class5=____Class5===null?null:____Class5.prototype;Field.prototype=Object.create(____SuperProtoOf____Class5);Field.prototype.constructor=Field;Field.__superConstructor__=____Class5;function Field(){if(____Class5!==null){____Class5.apply(this,arguments);}}
+  Object.defineProperty(Field.prototype,"getColClassName",{writable:true,configurable:true,value:function() {
+    var props = this.props
+    var classNames = {}
+    classNames[("col-xs-" + props.xs)] = !!props.xs
+    classNames[("col-sm-" + props.sm)] = !!props.sm
+    classNames[("col-md-" + props.md)] = !!props.md
+    classNames[("col-lg-" + props.lg)] = !!props.lg
+    classNames[("col-xs-offset-" + props.xsOffset)] = !!props.xsOffset
+    classNames[("col-sm-offset-" + props.smOffset)] = !!props.smOffset
+    classNames[("col-md-offset-" + props.mdOffset)] = !!props.mdOffset
+    classNames[("col-lg-offset-" + props.lgOffset)] = !!props.lgOffset
+    return cx(props.className, classNames)
+  }});
 
-  render:function() {
+  Object.defineProperty(Field.prototype,"render",{writable:true,configurable:true,value:function() {
     var field = this.props.form.boundField(this.props.name)
     return React.createElement("div", {className: this.getColClassName()}, 
       React.createElement(BootstrapField, {key: field.htmlName, field: field})
     )
-  }
-})
+  }});
+
+
+Col.propTypes = {
+  name: PropTypes.string.isRequired
+};
 
 extend(BootstrapForm, {
   calculateColumnProps:calculateColumnProps

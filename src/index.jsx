@@ -152,55 +152,14 @@ var BootstrapRadioInlineRenderer = RadioFieldRenderer.extend({
 
 // ========================================================= Form Components ===
 
-var BootstrapForm = React.createClass({
-  statics: {
-    patchFields(form) {
-      if (form.__patchedByBootstrapForm) { return }
-      var fieldNames = Object.keys(form.fields)
-      for (var i = 0, l = fieldNames.length; i < l ; i++) {
-        var field = form.fields[fieldNames[i]]
-        if (field.widget instanceof CheckboxSelectMultiple) {
-          if (field.widget.renderer === CheckboxFieldRenderer) {
-            field.widget.renderer = BootstrapCheckboxRenderer
-          }
-        }
-        else if (field.widget instanceof RadioSelect) {
-          if (field.widget.renderer === RadioFieldRenderer) {
-            field.widget.renderer = BootstrapRadioRenderer
-          }
-        }
-        else if (field instanceof MultiValueField) {
-          if (field.fields.length < 5 &&
-              field.widget.formatOutput === MultiWidget.prototype.formatOutput) {
-            var colClass = 'col-sm-' + (12 / field.fields.length)
-            field.widget.formatOutput = function(widgets) {
-              return <div className="row">
-                {widgets.map(widget => <div className={colClass}>{widget}</div>)}
-              </div>
-            }
-          }
-        }
-      }
-    }
-  },
-
-  propTypes: {
-    form: PropTypes.instanceOf(Form).isRequired,
-    spinner: PropTypes.string
-  },
-
-  getDefaultProps() {
-    return {
-      spinner: SPINNER
-    }
-  },
-
+// var BootstrapForm = React.createClass()
+class BootstrapForm extends React.Component {
   render() {
     patchForm(this.props.form)
     return <div>
       {this.renderRows()}
     </div>
-  },
+  }
 
   renderRows() {
     var rows = []
@@ -227,20 +186,48 @@ var BootstrapForm = React.createClass({
     }
     return rows
   }
-})
+}
 
-var BootstrapField = React.createClass({
-  propTypes: {
-    field: PropTypes.instanceOf(BoundField).isRequired
-  , spinner: PropTypes.string
-  },
-
-  getDefaultProps() {
-    return {
-      spinner: SPINNER
+BootstrapForm.patchFields = function(form) {
+  if (form.__patchedByBootstrapForm) { return }
+  var fieldNames = Object.keys(form.fields)
+  for (var i = 0, l = fieldNames.length; i < l ; i++) {
+    var field = form.fields[fieldNames[i]]
+    if (field.widget instanceof CheckboxSelectMultiple) {
+      if (field.widget.renderer === CheckboxFieldRenderer) {
+        field.widget.renderer = BootstrapCheckboxRenderer
+      }
     }
-  },
+    else if (field.widget instanceof RadioSelect) {
+      if (field.widget.renderer === RadioFieldRenderer) {
+        field.widget.renderer = BootstrapRadioRenderer
+      }
+    }
+    else if (field instanceof MultiValueField) {
+      if (field.fields.length < 5 &&
+          field.widget.formatOutput === MultiWidget.prototype.formatOutput) {
+        var colClass = 'col-sm-' + (12 / field.fields.length)
+        field.widget.formatOutput = function(widgets) {
+          return <div className="row">
+            {widgets.map(widget => <div className={colClass}>{widget}</div>)}
+          </div>
+        }
+      }
+    }
+  }
+};
 
+BootstrapForm.propTypes = {
+  form: PropTypes.instanceOf(Form).isRequired,
+  spinner: PropTypes.string
+};
+
+BootstrapForm.defaultProps = {
+  spinner: SPINNER
+};
+
+// var BootstrapField = React.createClass()
+class BootstrapField extends React.Component {
   render() {
     var field = this.props.field
     var status = field.status()
@@ -277,7 +264,16 @@ var BootstrapField = React.createClass({
       {status == 'error' && field.errors().messages().map(errorMessage)}
     </div>
   }
-})
+}
+
+BootstrapField.propTypes = {
+  field: PropTypes.instanceOf(BoundField).isRequired
+, spinner: PropTypes.string
+};
+
+BootstrapField.defaultProps = {
+  spinner: SPINNER
+};
 
 // ========================================================= Grid Components ===
 
@@ -380,50 +376,8 @@ function calculateColumnProps(childProps, options) {
   return colSizeProps
 }
 
-var ColMixin = {
-  propTypes: {
-    className: PropTypes.string
-  , xs: colSizeChecker
-  , sm: colSizeChecker
-  , md: colSizeChecker
-  , lg: colSizeChecker
-  , xsOffset: colSizeChecker
-  , smOffset: colSizeChecker
-  , mdOffset: colSizeChecker
-  , lgOffset: colSizeChecker
-  },
-
-  getColClassName() {
-    var props = this.props
-    var classNames = {}
-    classNames[`col-xs-${props.xs}`] = !!props.xs
-    classNames[`col-sm-${props.sm}`] = !!props.sm
-    classNames[`col-md-${props.md}`] = !!props.md
-    classNames[`col-lg-${props.lg}`] = !!props.lg
-    classNames[`col-xs-offset-${props.xsOffset}`] = !!props.xsOffset
-    classNames[`col-sm-offset-${props.smOffset}`] = !!props.smOffset
-    classNames[`col-md-offset-${props.mdOffset}`] = !!props.mdOffset
-    classNames[`col-lg-offset-${props.lgOffset}`] = !!props.lgOffset
-    return cx(props.className, classNames)
-  }
-}
-
-var Container = React.createClass({
-  propTypes: {
-    autoColumns: PropTypes.oneOf(BOOTSTRAP_COLUMN_SIZES)
-  , className: PropTypes.string
-  , fluid: PropTypes.bool
-  , spinner: PropTypes.string
-  },
-
-  getDefaultProps() {
-    return {
-      autoColumns: null
-    , fluid: false
-    , spinner: SPINNER
-    }
-  },
-
+// var Container = React.createClass()
+class Container extends React.Component {
   render() {
     var {form} = this.props
     patchForm(form)
@@ -443,14 +397,22 @@ var Container = React.createClass({
       </span>}
     </div>
   }
-})
+}
 
-var Row = React.createClass({
-  propTypes: {
-    autoColumns: PropTypes.oneOf(BOOTSTRAP_COLUMN_SIZES)
-  , className: PropTypes.string
-  },
+Container.propTypes = {
+  autoColumns: PropTypes.oneOf(BOOTSTRAP_COLUMN_SIZES)
+, className: PropTypes.string
+, fluid: PropTypes.bool
+, spinner: PropTypes.string
+};
 
+Container.defaultProps = {
+  autoColumns: null
+  , fluid: false
+  , spinner: SPINNER
+}
+
+class Row extends React.Component {
   render() {
     var columnProps = noobj
     if (this.props.autoColumns) {
@@ -472,24 +434,49 @@ var Row = React.createClass({
       })}
     </div>
   }
-})
+}
 
-var Col = React.createClass({
-  mixins: [ColMixin],
+Row.propTypes = {
+  autoColumns: PropTypes.oneOf(BOOTSTRAP_COLUMN_SIZES)
+, className: PropTypes.string
+};
+
+class Col extends React.Component {
+  getColClassName() {
+    var props = this.props
+    var classNames = {}
+    classNames[`col-xs-${props.xs}`] = !!props.xs
+    classNames[`col-sm-${props.sm}`] = !!props.sm
+    classNames[`col-md-${props.md}`] = !!props.md
+    classNames[`col-lg-${props.lg}`] = !!props.lg
+    classNames[`col-xs-offset-${props.xsOffset}`] = !!props.xsOffset
+    classNames[`col-sm-offset-${props.smOffset}`] = !!props.smOffset
+    classNames[`col-md-offset-${props.mdOffset}`] = !!props.mdOffset
+    classNames[`col-lg-offset-${props.lgOffset}`] = !!props.lgOffset
+    return cx(props.className, classNames)
+  }
 
   render() {
     return <div className={this.getColClassName()}>
       {this.props.children}
     </div>
   }
-})
+}
 
-var Field = React.createClass({
-  mixins: [ColMixin],
-
-  propTypes: {
-    name: PropTypes.string.isRequired
-  },
+class Field extends React.Component {
+  getColClassName() {
+    var props = this.props
+    var classNames = {}
+    classNames[`col-xs-${props.xs}`] = !!props.xs
+    classNames[`col-sm-${props.sm}`] = !!props.sm
+    classNames[`col-md-${props.md}`] = !!props.md
+    classNames[`col-lg-${props.lg}`] = !!props.lg
+    classNames[`col-xs-offset-${props.xsOffset}`] = !!props.xsOffset
+    classNames[`col-sm-offset-${props.smOffset}`] = !!props.smOffset
+    classNames[`col-md-offset-${props.mdOffset}`] = !!props.mdOffset
+    classNames[`col-lg-offset-${props.lgOffset}`] = !!props.lgOffset
+    return cx(props.className, classNames)
+  }
 
   render() {
     var field = this.props.form.boundField(this.props.name)
@@ -497,7 +484,11 @@ var Field = React.createClass({
       <BootstrapField key={field.htmlName} field={field}/>
     </div>
   }
-})
+}
+
+Col.propTypes = {
+  name: PropTypes.string.isRequired
+};
 
 extend(BootstrapForm, {
   calculateColumnProps
